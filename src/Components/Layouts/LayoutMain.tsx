@@ -1,8 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 import image from "../../assets/images/pokemon.svg";
 import iconMap from "../../assets/iconMap";
+import Sidebar from "../sidebar";
 const LayoutMain: React.FC = () => {
+  // const navigate = useNavigate();
   const [theme, setTheme] = useState(
     () => localStorage.getItem("theme") || "light"
   );
@@ -10,7 +13,9 @@ const LayoutMain: React.FC = () => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme, image]);
-
+  const toggleProfile = () => {
+    window.open("https://innovatech404.web.app/", "_blank");
+  };
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -24,7 +29,7 @@ const LayoutMain: React.FC = () => {
         <div className="w-full p-5">
           <div className="navbar bg-secondary w-full shadow-md rounded-lg">
             <div className="flex justify-between w-full">
-              <div className="flex-none lg:hidden dark:text-black">
+              <div className="flex-none  dark:text-black">
                 <label
                   htmlFor="my-drawer-3"
                   aria-label="open sidebar"
@@ -81,34 +86,13 @@ const LayoutMain: React.FC = () => {
           <Outlet />
         </div>
       </div>
-      <div className="drawer-side">
-        <label
-          htmlFor="my-drawer-3"
-          aria-label="close sidebar"
-          className="drawer-overlay"
-        ></label>
-        <ul className="menu bg-base-200 min-h-full w-80 z-10 p-4">
-          {/* Sidebar content here */}
-          <div>
-            <button
-              onClick={toggleTheme}
-              className="btn btn-ghost hover:bg-transparent tooltip absolute bottom-5 tooltip-right"
-              data-tip="best experience try using dark mode"
-            >
-              {theme !== "light" ? (
-                <div className="flex items-center gap-1">
-                  <iconMap.MdOutlineWbSunny size={25} /> <h4>light</h4>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1">
-                  <iconMap.MdOutlineDarkMode size={25} />
-                  <h4>dark</h4>
-                </div>
-              )}
-            </button>
-          </div>
-        </ul>
-      </div>
+
+      {/* Sidebar */}
+      <Sidebar
+        toggleTheme={toggleTheme}
+        theme={theme}
+        toggleProfile={toggleProfile}
+      />
     </div>
   );
 };

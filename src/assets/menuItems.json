@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Dashboard",
+    "icon": "IoHome",
+    "route": "/dashboard",
+    "external": false
+  },
+  {
+    "title": "Context",
+    "icon": "FaRegFolderOpen",
+    "route": "/context",
+    "external": false
+  }
+]

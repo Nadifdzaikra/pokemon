@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { fetchPokemonList, fetchPokemonDetails } from "../api/apiservice";
+import {
+  fetchPokemonList,
+  fetchPokemonDetails,
+  fetchListType,
+} from "../api/apiservice";
 import iconMap from "../assets/iconMap";
 const HomePages = () => {
   const [data, setData] = useState<any[]>([]);
@@ -16,22 +20,28 @@ const HomePages = () => {
   const [savingModal, setSavingModal] = useState(false); // Untuk modal menyimpan alias
   const [selectedPokemon, setSelectedPokemon] = useState<any>(null); // Untuk menyimpan Pokémon yang dipilih
   const [nameDetail, setNameDetail] = useState("");
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const res = await fetchPokemonList(filter.limit);
-        setData(res.results);
-        //   console.log(res.results);
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getData();
-  }, [filter]);
-
+  const [listType, setListType] = useState<any[]>([]);
+  const getData = async () => {
+    setLoading(true);
+    try {
+      const res = await fetchPokemonList(filter.limit);
+      const detailedList = await Promise.all(
+        res.results.map(async (pokemon: any) => {
+          const details = await fetchPokemonDetails(pokemon.name);
+          return {
+            name: pokemon.name,
+            image: details.sprites.front_default,
+            types: details.types.map((typeInfo: any) => typeInfo.type.name),
+          };
+        })
+      );
+      setData(detailedList);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   const getDetail = async (name: string) => {
     try {
       const res = await fetchPokemonDetails(name);
@@ -42,41 +52,49 @@ const HomePages = () => {
       setLoading(false);
     }
   };
-  const detailPokemon = (name: string) => {
-    getDetail(name);
-    setNameDetail(name);
-    setModal(!modal);
+  const getType = async () => {
+    setLoading(true);
+    try {
+      const res = await fetchListType();
+      setListType(res.results);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
-
   const handleSave = () => {
     if (alias) {
-      console.log(
-        `Saving Pokémon: ${selectedPokemon.name} with alias: ${alias}`
-      );
-
       const savedPokemons =
         JSON.parse(localStorage.getItem("pokemonssaved") || "[]") || [];
-
       savedPokemons.push({
         name: selectedPokemon.name,
         detail: selectedPokemon,
-        alias: alias,
+        alias,
       });
       localStorage.setItem("pokemonssaved", JSON.stringify(savedPokemons));
-
       setSavingModal(false);
-      setAlias(""); // Reset alias after saving
+      setAlias("");
     }
   };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const detailPokemon = (pokemon: any) => {
+    setSelectedPokemon(pokemon);
+    getDetail(pokemon.name);
+    setNameDetail(pokemon.name);
+    setModal(true);
+  };
 
   const filteredData = data.filter(
-    (pokemon: any) =>
-      (!filter.type || pokemon.types === filter.type) &&
+    (pokemon) =>
+      (!filter.type || pokemon.types.includes(filter.type)) &&
       pokemon.name.toLowerCase().includes(searchName.toLowerCase())
   );
+
+  useEffect(() => {
+    getData();
+    getType();
+  }, [filter]);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -92,9 +110,11 @@ const HomePages = () => {
           className="select select-bordered w-full max-w-xs input-ghost"
         >
           <option value="">All Types</option>
-          <option value="fire">Fire</option>
-          <option value="water">Water</option>
-          <option value="grass">Grass</option>
+          {listType.map((type) => (
+            <option key={type.name} value={type.name}>
+              {type.name}
+            </option>
+          ))}
           {/* Tambahkan opsi type lainnya sesuai kebutuhan */}
         </select>
         {/* set limit*/}
@@ -248,7 +268,9 @@ const HomePages = () => {
           <div
             className="card dark:bg-zinc-800 shadow-md rounded-xl p-20 flex-grow flex-shrink-0 w-1/10 text-center items-center font-light shadow-zinc-200 dark:shadow-zinc-900 text-lg hover:p-24 cursor-pointer hover:text-yellow-300 dark:hover:text-yellow-200 hover:text-shadow-xl transition-all  ease-in-out delay-100 hover:shadow-lg"
             key={index}
-            onClick={() => detailPokemon(pokemon.name)}
+            onClick={() => {
+              detailPokemon(pokemon);
+            }}
           >
             {pokemon.name}
           </div>

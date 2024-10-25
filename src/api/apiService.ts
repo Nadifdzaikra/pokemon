@@ -22,3 +22,11 @@ export const fetchPokemonDetails = async (name: string) => {
     throw new Error((error as Error).message || "Failed to fetch Pokémon data");
   }
 };
+export const fetchListType = async () => {
+  try {
+    const response = await axiosInstance.get("type");
+    return response.data;
+  } catch (error) {
+    throw new Error((error as Error).message || "Failed to fetch list type");
+  }
+};
