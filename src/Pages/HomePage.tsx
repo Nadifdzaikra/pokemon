@@ -3,7 +3,7 @@ import {
   fetchPokemonList,
   fetchPokemonDetails,
   fetchListType,
-} from "../api/apiservice";
+} from "../api/apiServiceBase";
 import iconMap from "../assets/iconMap";
 const HomePages = () => {
   const [data, setData] = useState<any[]>([]);
