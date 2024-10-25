@@ -3,12 +3,11 @@ import { createBrowserRouter } from "react-router-dom";
 import LayoutMain from "../Components/Layouts/LayoutMain";
 import HomePage from "../Pages/HomePage";
 // import LoginPage from "../Pages/LoginPage";
-import NotFoundPage from "../Pages/NotFoundPage";
 // import ProtectedRoute from "./ProtectedRoute";
+import NotFoundPage from "../Pages/NotFoundPage";
 import ContextPage from "../Pages/Context";
 // Status autentikasi dari localStorage
 // const isAuthenticated = localStorage.getItem("authToken") !== null;
-
 const router = createBrowserRouter(
   [
     {
@@ -42,7 +41,8 @@ const router = createBrowserRouter(
       element: <NotFoundPage />,
     },
   ],
-  { basename: import.meta.env.BASE_URL }
+  //   { basename: import.meta.env.BASE_URL }
+  { basename: "/pokemon" }
 );
 
 export default router;
