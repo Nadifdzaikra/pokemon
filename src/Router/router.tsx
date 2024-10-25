@@ -23,11 +23,11 @@ const router = createHashRouter(
           element: <HomePage />,
         },
         {
-          path: "dashboard",
+          path: "/dashboard",
           element: <HomePage />,
         },
         {
-          path: "context",
+          path: "/context",
           element: <ContextPage />,
         },
       ],

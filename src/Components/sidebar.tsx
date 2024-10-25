@@ -25,11 +25,11 @@ const sidebar: React.FC<SidebarProps> = ({
         {menuItems.map((item, index) => {
           const iconKey = item.icon as keyof typeof iconMap;
           const IconComponent = iconMap[iconKey];
-
+          // .replace(/^\//, "")
           return (
             <li key={index} className="mb-2">
               <a
-                href={basename + item.route.replace(/^\//, "")}
+                href={basename + "#" + item.route}
                 className="flex items-center gap-2"
                 target={item.external ? "_blank" : "_self"}
                 rel={item.external ? "noopener noreferrer" : undefined}
