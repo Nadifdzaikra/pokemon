@@ -4,7 +4,7 @@ import HomePage from "../Pages/HomePage";
 import LoginPage from "../Pages/LoginPage";
 import NotFoundPage from "../Pages/NotFoundPage";
 import ProtectedRoute from "./ProtectedRoute";
-
+import ContextPage from "../Pages/Context";
 // Status autentikasi dari localStorage
 const isAuthenticated = localStorage.getItem("authToken") !== null;
 
@@ -24,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <HomePage />,
+      },
+      {
+        path: "/context",
+        element: <ContextPage />,
       },
     ],
   },

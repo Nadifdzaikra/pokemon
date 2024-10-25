@@ -14,7 +14,7 @@ const HomePages = () => {
   const [searchName, setSearchName] = useState(""); // Untuk pencarian
   const [alias, setAlias] = useState(""); // Untuk alias
   const [savingModal, setSavingModal] = useState(false); // Untuk modal menyimpan alias
-  const [selectedPokemon, setSelectedPokemon] = useState(""); // Untuk menyimpan Pokémon yang dipilih
+  const [selectedPokemon, setSelectedPokemon] = useState<any>(null); // Untuk menyimpan Pokémon yang dipilih
   const [nameDetail, setNameDetail] = useState("");
   useEffect(() => {
     const getData = async () => {
@@ -50,12 +50,18 @@ const HomePages = () => {
 
   const handleSave = () => {
     if (alias) {
-      console.log(`Saving Pokémon: ${selectedPokemon} with alias: ${alias}`);
+      console.log(
+        `Saving Pokémon: ${selectedPokemon.name} with alias: ${alias}`
+      );
 
       const savedPokemons =
         JSON.parse(localStorage.getItem("pokemonssaved") || "[]") || [];
 
-      savedPokemons.push({ name: selectedPokemon, alias: alias });
+      savedPokemons.push({
+        name: selectedPokemon.name,
+        detail: selectedPokemon,
+        alias: alias,
+      });
       localStorage.setItem("pokemonssaved", JSON.stringify(savedPokemons));
 
       setSavingModal(false);
@@ -152,7 +158,7 @@ const HomePages = () => {
               <button
                 className="btn"
                 onClick={() => {
-                  setSavingModal(false), setSelectedPokemon(dataDetail.name);
+                  setSavingModal(false);
                 }}
               >
                 Cancel
@@ -226,7 +232,9 @@ const HomePages = () => {
             </div>
             <button
               onClick={() => {
-                setSavingModal(true), setModal(false);
+                setSavingModal(true),
+                  setModal(false),
+                  setSelectedPokemon(dataDetail);
               }}
             >
               <iconMap.MdFormatListBulletedAdd size={20} />
