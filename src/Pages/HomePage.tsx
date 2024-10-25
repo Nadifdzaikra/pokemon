@@ -129,6 +129,7 @@ const HomePages = () => {
           <option value={10}>10</option>
           <option value={50}>50</option>
           <option value={100}>100</option>
+          <option value={100}>300</option>
           {/* Tambahkan opsi type lainnya sesuai kebutuhan */}
         </select>
         {/* Search by name */}
@@ -208,7 +209,7 @@ const HomePages = () => {
                 <img
                   src={dataDetail ? dataDetail.sprites.front_default : ""}
                   alt="pokemon"
-                  className="w-40 h-40 items-center"
+                  className="max-w-40 max-h-40 items-center"
                 />
               </div>
               <div className="grid grid-cols-2 my-auto gap-4">
@@ -273,6 +274,11 @@ const HomePages = () => {
             }}
           >
             {pokemon.name}
+            <img
+              src={pokemon.image || pokemon.sprites.front_default}
+              alt={pokemon.name}
+              className="max-w-32 max-h-32"
+            />
           </div>
         ))}
       </div>
