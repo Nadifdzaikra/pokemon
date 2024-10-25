@@ -29,7 +29,7 @@ const sidebar: React.FC<SidebarProps> = ({
           return (
             <li key={index} className="mb-2">
               <a
-                href={basename + item.route}
+                href={basename + item.route.replace(/^\//, "")}
                 className="flex items-center gap-2"
                 target={item.external ? "_blank" : "_self"}
                 rel={item.external ? "noopener noreferrer" : undefined}
