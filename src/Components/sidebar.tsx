@@ -11,6 +11,7 @@ const sidebar: React.FC<SidebarProps> = ({
   theme,
   toggleProfile,
 }) => {
+  const basename = import.meta.env.BASE_URL;
   return (
     <div className="drawer-side">
       <label
@@ -28,7 +29,7 @@ const sidebar: React.FC<SidebarProps> = ({
           return (
             <li key={index} className="mb-2">
               <a
-                href={item.route}
+                href={basename + item.route}
                 className="flex items-center gap-2"
                 target={item.external ? "_blank" : "_self"}
                 rel={item.external ? "noopener noreferrer" : undefined}
