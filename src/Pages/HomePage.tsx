@@ -5,6 +5,8 @@ import {
   fetchListType,
 } from "../api/apiServiceBase";
 import iconMap from "../assets/iconMap";
+import { usePokemonContext } from "../context/PokemonContext"; // Import context
+
 const HomePages = () => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,16 +20,22 @@ const HomePages = () => {
   const [searchName, setSearchName] = useState(""); // Untuk pencarian
   const [alias, setAlias] = useState(""); // Untuk alias
   const [savingModal, setSavingModal] = useState(false); // Untuk modal menyimpan alias
-  const [selectedPokemon, setSelectedPokemon] = useState<any>(null); // Untuk menyimpan Pokémon yang dipilih
   const [nameDetail, setNameDetail] = useState("");
   const [listType, setListType] = useState<any[]>([]);
+
+  const {
+    selectedPokemon,
+    setSelectedPokemon,
+    addPokemon, // Gunakan addPokemon dari context
+  } = usePokemonContext(); // Ambil data dari context
+
   const getData = async () => {
     setLoading(true);
     try {
       const res = await fetchPokemonList(filter.limit);
       const detailedList = await Promise.all(
         res.results.map(async (pokemon: any) => {
-          const details = await fetchPokemonDetails(pokemon.name);
+          const details: any = await fetchPokemonDetails(pokemon.name);
           return {
             name: pokemon.name,
             image: details.sprites.front_default,
@@ -42,6 +50,7 @@ const HomePages = () => {
       setLoading(false);
     }
   };
+
   const getDetail = async (name: string) => {
     try {
       const res = await fetchPokemonDetails(name);
@@ -52,6 +61,7 @@ const HomePages = () => {
       setLoading(false);
     }
   };
+
   const getType = async () => {
     setLoading(true);
     try {
@@ -63,24 +73,33 @@ const HomePages = () => {
       setLoading(false);
     }
   };
+
   const handleSave = () => {
-    if (alias) {
-      const savedPokemons =
-        JSON.parse(localStorage.getItem("pokemonssaved") || "[]") || [];
-      savedPokemons.push({
+    console.log(selectedPokemon);
+    if (alias && selectedPokemon) {
+      const pokemonWithAlias = {
         name: selectedPokemon.name,
-        detail: selectedPokemon,
+        id: selectedPokemon.id,
+        image: selectedPokemon.image,
+        types: selectedPokemon.types.map((type: any) => type.type.name),
         alias,
-      });
-      localStorage.setItem("pokemonssaved", JSON.stringify(savedPokemons));
+      };
+      addPokemon(pokemonWithAlias);
       setSavingModal(false);
       setAlias("");
     }
   };
+
   const detailPokemon = (pokemon: any) => {
-    setSelectedPokemon(pokemon);
-    getDetail(pokemon.name);
+    console.log(pokemon);
+    setSelectedPokemon({
+      name: pokemon.name,
+      id: pokemon.id,
+      image: pokemon.image,
+      types: pokemon.types.map((type: any) => type.name),
+    });
     setNameDetail(pokemon.name);
+    getDetail(pokemon.name);
     setModal(true);
   };
 

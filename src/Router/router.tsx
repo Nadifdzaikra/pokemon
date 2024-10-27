@@ -1,11 +1,11 @@
 // import { createBrowserRouter, Navigate } from "react-router-dom";
 import { createHashRouter } from "react-router-dom";
 import LayoutMain from "../Components/Layouts/LayoutMain";
-import HomePage from "../Pages/HomePage";
+import HomePage from "../pages/HomePage";
 // import LoginPage from "../Pages/LoginPage";
 // import ProtectedRoute from "./ProtectedRoute";
-import NotFoundPage from "../Pages/NotFoundPage";
-import ContextPage from "../Pages/Context";
+import NotFoundPage from "../pages/NotFoundPage";
+import ContextPage from "../pages/Context";
 // Status autentikasi dari localStorage
 // const isAuthenticated = localStorage.getItem("authToken") !== null;
 const router = createHashRouter(

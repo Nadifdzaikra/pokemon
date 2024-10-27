@@ -1,27 +1,19 @@
 import { useEffect, useState } from "react";
 import iconMap from "../assets/iconMap";
-
+import { usePokemonContext } from "../context/PokemonContext";
 const ContextPage = () => {
   const [savedPokemons, setSavedPokemons] = useState<any[]>([]);
-  const handleDelete = (alias: string) => {
-    const updatedPokemons = savedPokemons.filter(
-      (pokemon) => pokemon.alias !== alias
-    );
+  const { pokemons, removePokemon } = usePokemonContext();
 
-    // Update state and localStorage
-    setSavedPokemons(updatedPokemons);
-    localStorage.setItem("pokemonssaved", JSON.stringify(updatedPokemons));
+  const handleDelete = (alias: string) => {
+    const pokemonToRemove = pokemons.find((pokemon) => pokemon.alias === alias);
+    if (pokemonToRemove) {
+      removePokemon(pokemonToRemove.id);
+    }
   };
   useEffect(() => {
-    const fetchSavedPokemons = () => {
-      const saved = localStorage.getItem("pokemonssaved");
-      if (saved) {
-        setSavedPokemons(JSON.parse(saved));
-      }
-    };
-
-    fetchSavedPokemons();
-  }, []);
+    setSavedPokemons(pokemons);
+  }, [pokemons]);
 
   return (
     <div>
@@ -41,7 +33,7 @@ const ContextPage = () => {
                 {pokemon.alias}
               </div>
               <img
-                src={pokemon.detail.sprites.front_default}
+                src={pokemon.image}
                 alt={pokemon.name}
                 className="w-32 h-32"
               />
