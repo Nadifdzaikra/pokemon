@@ -6,7 +6,7 @@
     "external": false
   },
   {
-    "title": "Context",
+    "title": "List Items",
     "icon": "FaRegFolderOpen",
     "route": "/context",
     "external": false
